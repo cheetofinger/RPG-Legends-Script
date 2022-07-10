@@ -1,0 +1,100 @@
+
+local FarmingDistance = 35
+local SavePosition = "..."
+
+getgenv().Farming = false;
+
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+
+local Window = Library.CreateLib("RPG Legends", "DarkTheme")
+
+local Tab = Window:NewTab("Combat")
+
+local Tab2 = Window:NewTab("Misc")
+
+local Tab3 = Window:NewTab("Credits")
+
+local Section = Tab:NewSection("Combat-Related")
+
+local Section2 = Tab2:NewSection("Teleport-Related")
+
+local Section3 = Tab3:NewSection("Tyres#1972 if you have questions")
+
+
+Section3:NewLabel("Watch the tutorial before using!")
+Section3:NewLabel("Youtube: P0ke102")
+Section3:NewLabel("If you guys like it I will update it")
+
+
+Section:NewButton("Anti-Aggro", "Very buggy, use with the intention of rejoining!", function()
+   game.ReplicatedStorage.Remotes.actionFunctions.Parent = game.Workspace
+   wait(1)
+   game.Workspace.actionFunctions.Parent = game.ReplicatedStorage.Remotes
+end)
+
+
+Section:NewToggle("FarmMob", "Use The Slider Below", function(state)
+   getgenv().Farming = state
+   while getgenv().Farming == true do
+   UpdatePositionFarming()
+   print(state)
+   wait(0.5)
+  end
+end)
+
+Section:NewSlider("FarmingDistance", "FarmMobsFromThisDistance", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    if FarmingDistance ~= 0 then
+    FarmingDistance = s
+    end
+end)
+
+
+
+Section2:NewButton("SetTeleportSpot", "Save your position", function()
+    SavePosition = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    UpdateSavedPositionInfo = SavePosition
+end)
+
+Section2:NewButton("GotoTeleportSpot", "Goto your position", function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = SavePosition
+end)
+
+
+local good = false
+
+function UpdatePositionFarming()
+    
+    for i,v in pairs(game.Workspace.Enemies:GetDescendants()) do
+        if v.Name == "HumanoidRootPart" then
+        if (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= FarmingDistance then
+            local New_CFrame = v.CFrame * CFrame.new(0,0,6)
+            local ts = game:GetService("TweenService")
+            local char = game.Players.LocalPlayer.Character
+            
+            local part = char.HumanoidRootPart
+            local ti = TweenInfo.new(1, Enum.EasingStyle.Linear)
+            local tp = {CFrame = New_CFrame}
+            if good == true then 
+                ts:Create(part, ti, tp):Play() end
+        if v.Parent.Humanoid.Health >= 1 then
+ts:Create(part, ti, tp):Play()
+good = true
+        else
+            if v.Parent.Humanoid.Health >= 1 then
+                ts:Create(part, ti, tp):Play()
+                
+            end
+        end
+    end
+        end
+    end
+end
+
+Section2:NewButton("Blacksmith", "my dex broken so you gotta deal with it", function()
+local previousCFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Workspace.Ignore.NPCS.Blacksmith.RightFoot.CFrame * CFrame.new(0,2,0)
+wait()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = previousCFrame
+ end)
+ 
